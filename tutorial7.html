@@ -41,11 +41,13 @@
             
         // Define the image pattern
         var pattern1 = defs.append("pattern")
-            .attr("id","imageID1")
             .attr("x",0)
             .attr("y",0)
             .attr("height",imgHeight)
             .attr("width",imgWidth)
+
+        pattern1.attr("id","imageID1")
+
 
         pattern1.append("svg:image")
             .attr("x",0)
@@ -73,6 +75,7 @@
             // d3.selectAll("rect")
 
             var dataCurrent = this.value;
+            console.log(this)
             console.log(dataCurrent)
 
             //Other Parameters
@@ -80,22 +83,28 @@
             var perRow = 3;
 
             var wholeNum1 = Math.floor(dataCurrent)
-            var decimal = Math.round((dataCurrent - wholeNum1)*10)/10  //have to round the answer to tenth place, otherwise lots of decimal places.
-            var partialHeight = imgHeight * decimal
+            // var decimal = Math.round((dataCurrent - wholeNum1)*10)/10  //have to round the answer to tenth place, otherwise lots of decimal places.
+            // var partialHeight = imgHeight * decimal
 
-            console.log(wholeNum1)
+            // console.log(wholeNum1)
 
             //number stuff
 
             var totalRows = Math.floor((wholeNum1 + (perRow-1))/perRow);
             var fullRows = totalRows - 1;
             var remainder = wholeNum1 % perRow;
-            console.log(totalRows)
-            console.log(fullRows)
-            console.log(remainder)
+            // console.log(totalRows)
+            // console.log(fullRows)
+            // console.log(remainder)
 
  
             /////////////DO THE WORK
+
+            // Begin by removing previous rect's (can i do it by class?)    
+            d3.select("body").selectAll("rect").data([]).exit().remove();
+
+            // reset beginning Y level
+            k = 0;
 
             //On reload or switch of state
                 for (var i = 0; i < fullRows; i++) {
@@ -112,12 +121,13 @@
                     buildTwo();
                 };
 
+// console.log('TWÅ')
             ///////////////////////////// Work done
 
         });
     });
 }(jQuery));  
-
+        
 
 function buildFullRows() {
     k += 1;
