@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>D3 Demo: Bar chart with random values</title>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+        <style type="text/css">
+        
+        
+        </style>
+    </head>
+    <body>
+        <div id="right_text">
+            <h3>Find out how much it costs to fuel an electric vehicle in your state</h3>
+
+            <select id="mySelect"></select>
+        </div>
+        <script type="text/javascript" src="jquery.js"></script>
+        <script type="text/javascript" src="data.js"></script>
+        <script type="text/javascript">
+        
+        var k = 0;
+
+        //SVG Width and height
+        var svgWidth = 1000;
+        var svgHeight = 400;
+
+        //Box parameters
+        var barPadding = 1;
+        var imgWidth = 50;
+        var imgHeight = 50;
+
+        //D3 begins
+        var svg = d3.select("body").append("svg")
+        .attr("height", svgHeight)
+        .attr("width", svgWidth)
+
+        var defs = svg.append("defs")
+            .attr("id","mdef");
+            
+        // Define the image pattern
+        var pattern1 = defs.append("pattern")
+            .attr("id","imageID1")
+            .attr("x",0)
+            .attr("y",0)
+            .attr("height",imgHeight)
+            .attr("width",imgWidth)
+
+        pattern1.append("svg:image")
+            .attr("x",0)
+            .attr("y",0)
+            .attr("width",imgWidth - 10)
+            .attr("height",imgHeight - 10)
+            .attr("xlink:href", "http://www.e-pint.com/epint.jpg");
+
+//Define the dropdown from the data.
+(function ($) {
+    $(document).ready(function() {
+        
+        var mySelect = $('#mySelect');
+
+
+        $.each(data, function(i) {
+            mySelect.append(
+                $('<option></option>').val(data[i].other4).html(data[i].state)
+            );
+        });
+
+        $('select').change(function (e){ 
+            e.preventDefault();
+
+            // d3.selectAll("rect")
+
+            var dataCurrent = this.value;
+            console.log(dataCurrent)
+
+            //Other Parameters
+            // var data = 18;
+            var perRow = 3;
+
+            var wholeNum1 = Math.floor(dataCurrent)
+            var decimal = Math.round((dataCurrent - wholeNum1)*10)/10  //have to round the answer to tenth place, otherwise lots of decimal places.
+            var partialHeight = imgHeight * decimal
+
+            console.log(wholeNum1)
+
+            //number stuff
+
+            var totalRows = Math.floor((wholeNum1 + (perRow-1))/perRow);
+            var fullRows = totalRows - 1;
+            var remainder = wholeNum1 % perRow;
+            console.log(totalRows)
+            console.log(fullRows)
+            console.log(remainder)
+
+ 
+            /////////////DO THE WORK
+
+            //On reload or switch of state
+                for (var i = 0; i < fullRows; i++) {
+                    //for each full row build three in a row
+                    buildFullRows();
+                };
+
+                if (remainder == 0) {                    
+                    buildTwo();                    
+                    buildOne();
+                } else if (remainder == (perRow - (perRow-1))) {
+                    buildOne();
+                } else if (remainder == (perRow - (perRow-2))) {
+                    buildTwo();
+                };
+
+            ///////////////////////////// Work done
+
+        });
+    });
+}(jQuery));  
+
+
+function buildFullRows() {
+    k += 1;
+    for (var j = 0; j < 3; j++) {
+        
+        svg.append("rect")
+         .attr("x", j*30)
+         .attr("y", svgHeight - (k*40)-40)
+         .attr("width", imgWidth)
+         .attr("height", imgHeight)
+         .style("fill", "transparent")       // this code works OK
+         .style("fill", "url(#imageID1)");             
+    };  
+}
+
+function buildOne () {
+    k += 1
+    svg.append("rect")
+     .attr("x", 30)
+     .attr("y", svgHeight - (k*40)-40)
+     .attr("width", imgWidth)
+     .attr("height", imgHeight)
+     .style("fill", "transparent")       // this code works OK
+     .style("fill", "url(#imageID1)");
+}   
+
+function buildTwo () {
+    k += 1
+    for (var j = 0; j < 2; j++) {
+        svg.append("rect")
+         .attr("x", (j*30)+15)
+         .attr("y", svgHeight - (k*40)-40)
+         .attr("width", imgWidth)
+         .attr("height", imgHeight)
+         .style("fill", "transparent")       // this code works OK
+         .style("fill", "url(#imageID1)");  
+    };
+}   
+
+        </script>
+    </body>
+</html>
